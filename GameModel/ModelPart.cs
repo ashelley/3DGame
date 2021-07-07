@@ -19,7 +19,7 @@ namespace GameModel
         public PartAnimation Animation;
         protected ModelVertex[] _vertices;
         protected int[] _indices;
-        protected List<ModelPart> Children;
+        public List<ModelPart> Children;
         public Matrix Dislocation;
         public float BoneFactor;
         public string Title;
@@ -36,11 +36,12 @@ namespace GameModel
             if (this.Children == null)
                 this.Children = new List<ModelPart>();
             this.Children.Add(part);
+            
         }
-        public virtual void Render(GraphicsDevice device, float dT, Matrix World, Effect fx,bool Alpha)
+        public virtual void Render(GraphicsDevice device, float Time, Matrix World, Effect fx,bool Alpha)
         {
             //get bone animation
-            Matrix a = Animation==null?Matrix.Identity:this.Animation.GetTransform(dT);
+            Matrix a = Animation==null?Matrix.Identity:this.Animation.GetTransformAt(Time);
            
             Matrix b;
             //a = Matrix.Identity;
@@ -50,16 +51,20 @@ namespace GameModel
             {
                     //animate part's location
                     b = Matrix.Lerp(Dislocation, Dislocation * a, c.BoneFactor);
-                    c.Render(device, dT, b*World, fx,Alpha);
+                    b = Matrix.Lerp(Matrix.Identity, a, c.BoneFactor);
+                    b = b*Dislocation;
+                    c.Render(device, Time, b*World, fx,Alpha);
                 }
-            if (Alpha)
-                return;
+           if (Alpha)
+               return;
             World = Dislocation * World;
 
             //fx.Parameters["xWorld2"].SetValue(Matrix.CreateTranslation(0, Y, 0));
             fx.Parameters["xWorld"].SetValue(World);
             fx.Parameters["xBone"].SetValue(a);
             fx.Parameters["xOrigin"].SetValue(Matrix.Identity);
+            if (TextureName != null && TextureName != "" && Model.TexturePool != null && Model.TexturePool.ContainsKey(TextureName))
+                fx.Parameters["xModelSkin"].SetValue(Model.TexturePool[TextureName]);
             fx.CurrentTechnique = fx.Techniques["GameModel"];
             fx.CurrentTechnique.Passes[0].Apply();
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, IndexOffset, (int)(IndexLength/3.0f));

@@ -9,22 +9,36 @@ namespace _3DGame
     /// </summary>
     public class Main : Game
     {
+
+        private void HandleTextInput(object sender, TextInputEventArgs e)
+        {
+            CurrentScene.WindowManager.HandleTextInput(e.Character, e.Key);
+        }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Interfaces.IGameScene CurrentScene;
+        public static Microsoft.Xna.Framework.Content.ContentManager ContentRef;
+        public static GraphicsDevice GraphicsRef;
+        public static Interfaces.IGameScene CurrentScene;
         public Main()
         {
+            Window.TextInput += HandleTextInput;
+
             this.IsFixedTimeStep = false;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            CurrentScene = new Scenes.Gameplay();
-            graphics.PreferredBackBufferHeight = 960;
-            graphics.PreferredBackBufferWidth = 1600;
+            //CurrentScene = new Scenes.Gameplay();
+            CurrentScene = new Scenes.CreateWorld();
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 1920;
 
             graphics.PreparingDeviceSettings += new System.EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
+           // graphics.IsFullScreen = true;
             Window.ClientSizeChanged += new System.EventHandler<System.EventArgs>(Window_ClientSizeChanged);
-            Window.AllowUserResizing = true;
+            //Window.AllowUserResizing = true;
+            Window.Position = new Point();
+            Window.IsBorderless = true;
             this.IsMouseVisible = true;
+            graphics.ApplyChanges();
         }
         void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
         {
@@ -58,6 +72,8 @@ namespace _3DGame
         /// </summary>
         protected override void LoadContent()
         {
+            GraphicsRef = GraphicsDevice;
+            ContentRef = Content;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             CurrentScene.Init(GraphicsDevice,Content);
@@ -73,6 +89,12 @@ namespace _3DGame
             CurrentScene.Dispose();
             // TODO: Unload any non ContentManager content here
         }
+
+        public static void ReloadScene()
+        {
+            CurrentScene.Init(GraphicsRef, ContentRef);
+        }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,11 +158,11 @@ namespace GameModel
         {
             public bool ModelBegun;
             public string CurrentPartName;
-
             public int LineNumber;
         }
         CompilerState state;
         ModelPart CurrentPart;
+        public List<string> Textures= new List<string>();
         string[] lines;
         public ModelPart R;
         Model Output;
@@ -176,14 +177,40 @@ namespace GameModel
             input = input.Replace("\t", " ");
             return input.Split(new char[] { '\n' },StringSplitOptions.RemoveEmptyEntries);
         }
+
+        public static string ColourToCode(Color input)
+        {
+            byte R, G, B;
+            R = input.R;
+            G = input.G;
+            B = input.B;
+            return R + ":" + G + ":" + B;
+        }
         #endregion
 
-        public static GameModel.Model LoadModel(string name)
+        public static GameModel.Model LoadModel(string name,Dictionary<string,string> Substitutes=null)
         {
             Model result;
+            if (Model.TexturePool == null)
+                Model.TexturePool = new Dictionary<string, Texture2D>();
+            if (Model.TextureList == null)
+                Model.TextureList = new List<string>();
             string modeldata= System.IO.File.ReadAllText(ModelBaseDir+"\\"+name+".mgf");
+            if(Substitutes!=null)
+            {
+                foreach(KeyValuePair<string,string> replace in Substitutes)
+                {
+                    modeldata = modeldata.Replace(replace.Key, replace.Value);
+                }
+            }
             ModelGeometryCompiler compiler = new ModelGeometryCompiler(modeldata);
             result = compiler.ReturnOutput();
+            if (compiler.Textures != null && compiler.Textures.Count > 0)
+                foreach (string texname in compiler.Textures)
+                {
+                    if (!Model.TexturePool.ContainsKey(texname) && !Model.TextureList.Contains(texname))
+                        Model.TextureList.Add(texname);
+                }
             return result;
         }
 
@@ -196,6 +223,8 @@ namespace GameModel
             Dictionary<string, ModelPart> parts = new Dictionary<string, ModelPart>();
             List<ModelPart> p = new List<ModelPart>();
             string choreoname = "";
+            Vector3 offset= Vector3.Zero;
+            float height = 0;
             string command = ls.Next();
             while(command!="#endmodel")
             {
@@ -224,6 +253,22 @@ namespace GameModel
 
                             break;
                         }
+                    case "#offset":
+                        {
+                            float X, Y, Z;
+                            X = ls.NextFloat();
+                            Y = ls.NextFloat();
+                            Z = ls.NextFloat();
+                            offset = new Vector3(X, Y, Z);
+                            break;
+                        }
+                    case "#height":
+                        {
+                            float X;
+                            X = ls.NextFloat();
+                            height = X;
+                            break;
+                        }
                     default:
                         {
                             //throw error here or something
@@ -234,7 +279,17 @@ namespace GameModel
                 ls = new LineSplitter(lines[state.LineNumber]);
                 command = ls.Next();
             }
-            Output.Choreo = LoadChoreo(System.IO.File.ReadAllText(ModelBaseDir+"\\"+choreoname+".mcf"));
+            string choreofname = ModelBaseDir + "\\" + choreoname + ".mcf";
+            //create a dummy if doesn't exist. Dumb workaround but works for now
+            if(!System.IO.File.Exists(choreofname))
+            {
+                System.IO.FileStream s = System.IO.File.Create(choreofname);
+                s.Close();
+            }
+            Output.Choreo = LoadChoreo(System.IO.File.ReadAllText(choreofname));
+            Output.ChoreoName = choreoname;
+            Output.Offset = offset;
+            Output.Height = height;
             ls = null;
 
         }
@@ -284,6 +339,8 @@ namespace GameModel
                     case "#texture": //TODO: set part's tex
                         {
                             result.TextureName = ls.NextQuoted();
+                            if (!Textures.Contains(result.TextureName))
+                                Textures.Add(result.TextureName);
                             break;
                         }
                     case "#billboard": //TODO: turn into PartLight, set tex and bb type
@@ -316,11 +373,13 @@ namespace GameModel
             Z = ls.NextFloat();
             rgb = ls.Next().Split(':');
             c = new Microsoft.Xna.Framework.Color(int.Parse(rgb[0]), int.Parse(rgb[1]), int.Parse(rgb[2]));
+            //c.A = 127;
             U = ls.NextFloat();
             V = ls.NextFloat();
             W = 1f;
             if(!ls.EOL)
             W = ls.NextFloat();
+            W += 0;
             v.Position = new Microsoft.Xna.Framework.Vector3(X, Y, Z);
             v.Color = c;
             v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(U, V);

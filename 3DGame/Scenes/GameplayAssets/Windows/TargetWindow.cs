@@ -10,13 +10,13 @@ namespace _3DGame.Scenes.GameplayAssets.Windows
 {
     public class TargetWindow : GUI.Window
     {
-        public GameObjects.MapEntities.Actos.Player Player;
+        public GameObject.MapEntities.Actors.Player Player;
         private GUI.Controls.ProgressBar HPBar;
         public override void Close()
         {
 
         }
-        public TargetWindow(WindowManager WM, GameObjects.MapEntities.Actos.Player Player)
+        public TargetWindow(WindowManager WM, GameObject.MapEntities.Actors.Player Player)
         {
             this.Player = Player;
             this.Width = 200;
@@ -42,6 +42,8 @@ namespace _3DGame.Scenes.GameplayAssets.Windows
             }
             else
             {
+                if (this.Player.Target!=null && this.Player.Target.IsDead)
+                    this.Player.Target = null;
                 this.Visible = false;
             }
         }

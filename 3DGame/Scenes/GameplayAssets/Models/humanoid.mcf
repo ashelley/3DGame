@@ -1,0 +1,237 @@
+#beginchoreo
+	#beginmove "Walk"
+		#beginpart "LegR"
+			0.0 Z1
+			0.1 Z18
+			0.1 Z36
+			0.1 Z54
+			0.1 Z72
+			0.1 Z90
+			0.1 Z72
+			0.1 Z54
+			0.1 Z36
+			0.1 Z18
+			0.1 Z1
+		#endpart
+		#beginpart "AnkR"
+			0.0 Z1
+			0.1 Z-18
+			0.1 Z-36
+			0.1 Z-54
+			0.1 Z-72
+			0.1 Z-90
+			0.1 Z-72
+			0.1 Z-54
+			0.1 Z-36
+			0.1 Z-18
+			0.1 Z1
+		#endpart
+		#beginpart "LegL"
+			0.0 Z90
+			0.1 Z72
+			0.1 Z54
+			0.1 Z36
+			0.1 Z18
+			0.1 Z1
+			0.1 Z18
+			0.1 Z36
+			0.1 Z54
+			0.1 Z72
+			0.1 Z90
+		#endpart
+		#beginpart "AnkL"
+			0.0 Z-90
+			0.1 Z-72
+			0.1 Z-54
+			0.1 Z-36
+			0.1 Z-18
+			0.1 Z1
+			0.1 Z-18
+			0.1 Z-36
+			0.1 Z-54
+			0.1 Z-72
+			0.1 Z-90
+		#endpart
+		#beginpart "ArmR"
+			0.0 X85 Z45
+			0.1 X85 Z27
+			0.1 X85 Z9
+			0.1 X85 Z-9
+			0.1 X85 Z-27
+			0.1 X85 Z-45
+			0.1 X85 Z-27
+			0.1 X85 Z-9
+			0.1 X85 Z9
+			0.1 X85 Z27
+			0.1 X85 Z45
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+			0.1 Y90
+		#endpart
+		#beginpart "ArmL"
+			0.0 X-85 Z-45
+			0.1 X-85 Z-27
+			0.1 X-85 Z-9
+			0.1 X-85 Z9
+			0.1 X-85 Z27
+			0.1 X-85 Z45
+			0.1 X-85 Z27
+			0.1 X-85 Z9
+			0.1 X-85 Z-9
+			0.1 X-85 Z-27
+			0.1 X-85 Z-45
+		#endpart
+		#beginpart "ForeArmL"
+			0.0 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+			0.1 Y-90
+		#endpart
+		#beginpart "Root"
+			0.0 Z-10 T0,0,0
+			0.1 Z-10 T0,-0.02,0
+			0.1 Z-10 T0,-0.04,0
+			0.1 Z-10 T0,-0.06,0
+			0.1 Z-10 T0,-0.08,0
+			0.1 Z-10 T0,-0.10,0
+			0.1 Z-10 T0,-0.08,0
+			0.1 Z-10 T0,-0.06,0
+			0.1 Z-10 T0,-0.04,0
+			0.1 Z-10 T0,-0.02,0
+			0.1 Z-10 T0,0,0
+		#endpart
+	#endmove
+	#beginmove "ReadyAttack"
+		#beginpart "Root"
+			0.0 T0,0,0
+			2.5 T0,-0.0,0 Z-10
+		#endpart
+		#beginpart "ArmR"
+			0.0 X1
+			0.5 X18
+			0.5 X36
+			0.5 X54
+			0.5 X72
+			0.5 X90
+			0.5 X90
+			0.5 X90
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 T0,0,0
+			3.5 T0,0,0
+		#endpart
+	#endmove
+	#beginmove "Straighten"
+		#beginpart "ArmR"
+			0.0 X85 Z-10
+		#endpart
+		#beginpart "ArmL"
+			0.0 X-85 Z-10
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 Y20
+		#endpart
+		#beginpart "ForeArmL"
+			0.0 Y-20
+		#endpart
+	#endmove
+	#beginmove "StrikeBladeShortRight"
+		#beginpart "ArmR"
+			0.0 X85 Z-10
+			0.5 X50 Z30
+			0.1 X50 Z48
+			0.1 X50 Z66
+			0.1 X50 Z84
+			0.1 X50 Z102
+			0.1 X50 Z120
+			0.1 X75 Z102
+			0.1 X85 Z84
+			0.1 X95 Z66
+		#endpart
+		#beginpart "ArmL"
+			0.0 X-85 Z-10
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 Y20
+		#endpart
+		#beginpart "ForeArmL"
+			0.0 Y-20
+		#endpart
+		#beginpart "Root"
+			0.0 Y0
+			0.5 Y0
+			0.8 Y25
+		#endpart
+	#endmove
+	#beginmove "StrikeBladeShortLeft"
+		#beginpart "ArmL"
+			0.0 X-85 Z-10
+			0.5 X-50 Z30
+			0.1 X-50 Z48
+			0.1 X-50 Z66
+			0.1 X-50 Z84
+			0.1 X-50 Z102
+			0.1 X-50 Z120
+			0.1 X-75 Z102
+			0.1 X-85 Z84
+			0.1 X-95 Z66
+		#endpart
+		#beginpart "ArmR"
+			0.0 X85 Z-10
+		#endpart
+		#beginpart "ForeArmL"
+			0.0 Y-20
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 Y20
+		#endpart
+		#beginpart "Root"
+			0.0 Y0
+			0.5 Y0
+			0.8 Y-25
+		#endpart
+	#endmove
+	#beginmove "ChargeHands"
+		#beginpart "ArmR"
+			0.0 X85 Z-10
+			0.6 X85 Z70
+			0.2 X85 Z70
+			0.2 X95 Z70
+		#endpart
+		#beginpart "ArmL"
+			0.0 X-85 Z-10
+			0.6 X-85 Z55
+			0.2 X-85 Z55
+			0.2 X-95 Z55
+		#endpart
+		#beginpart "ForeArmR"
+			0.0 Y20
+			0.6 Y80 Z-80
+			0.2 Y80 Z-80
+			0.2 Y60 Z-50
+		#endpart
+		#beginpart "ForeArmL"
+			0.0 Y-20
+			0.6 Y-80 Z-80
+			0.2 Y-80 Z-80
+			0.2 Y-60 Z-50
+		#endpart
+	#endmove
+#endchoreo

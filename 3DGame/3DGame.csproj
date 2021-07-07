@@ -23,7 +23,7 @@
     <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
     <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <DocumentationFile>bin\Windows\x86\Debug\3DGame.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -43,57 +43,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Console.cs" />
-    <Compile Include="GameObjects\AbilityLogic\AbilityAnimation.cs" />
-    <Compile Include="GameObjects\AbilityLogic\AbilityEffect.cs" />
-    <Compile Include="GameObjects\AbilityLogic\AbilityLoader.cs" />
-    <Compile Include="GameObjects\Ability.cs" />
-    <Compile Include="GameObjects\AbilityLogic\Effects\Effect_damage_bmd_full.cs" />
-    <Compile Include="GameObjects\AbilityLogic\Effects\Effect_dot_mwp.cs" />
-    <Compile Include="GameObjects\AbilityLogic\EffectTemplate.cs" />
-    <Compile Include="GameObjects\Camera.cs" />
-    <Compile Include="GameObjects\Item.cs" />
-    <Compile Include="GameObjects\Items\BonusPool.cs" />
-    <Compile Include="GameObjects\Items\BonusTemplate.cs" />
-    <Compile Include="GameObjects\Items\Enchantment.cs" />
-    <Compile Include="GameObjects\Items\ItemBonus.cs" />
-    <Compile Include="GameObjects\Items\ItemEquip.cs" />
-    <Compile Include="GameObjects\Items\ItemMaterial.cs" />
-    <Compile Include="GameObjects\MapEntities\Actors\Hostile.cs" />
-    <Compile Include="GameObjects\MapEntities\EntitySpawner.cs" />
-    <Compile Include="GameObjects\MapEntities\Particle.cs" />
-    <Compile Include="GameObjects\MapEntities\ParticleEffect.cs" />
-    <Compile Include="GameObjects\MapEntities\ParticleGroup.cs" />
-    <Compile Include="GameObjects\MapEntities\ParticleGroups\Ring.cs" />
-    <Compile Include="GameObjects\MapEntities\Particles\Floating.cs" />
-    <Compile Include="GameObjects\MapEntities\Particles\Homing.cs" />
-    <Compile Include="GameObjects\MapEntities\Particles\LightBall.cs" />
-    <Compile Include="GameObjects\MapEntities\Particles\LightRay.cs" />
-    <Compile Include="GameObjects\MapEntities\Particles\Spiral.cs" />
-    <Compile Include="GameObjects\StatBonus.cs" />
-    <Compile Include="GameObjects\World.cs" />
-    <Compile Include="GameObjects\MapEntities\Actor.cs" />
-    <Compile Include="GameObjects\MapEntities\ActorLogic\StatObject.cs" />
-    <Compile Include="GameObjects\MapEntities\Actors\Player.cs" />
-    <Compile Include="GameObjects\MapEntity.cs" />
-    <Compile Include="GameObjects\RNG.cs" />
     <Compile Include="Interfaces\IActionIcon.cs" />
     <Compile Include="Interfaces\IGameObject.cs" />
     <Compile Include="Interfaces\IGameScene.cs" />
-    <Compile Include="Interfaces\WorldPosition.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\CreateWorld.cs" />
+    <Compile Include="Scenes\CreateWorldAssets\Windows\MapWindow.cs" />
     <Compile Include="Scenes\Gameplay.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\ConsoleWindow.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\EquipWindow.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\InventoryControl.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\InventoryWindow.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\ItemSlot.cs" />
-    <Compile Include="Scenes\GameplayAssets\Windows\SkillWindow.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\MultiActionChoice.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\NavWindow.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\NPCMenuItem.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\NPCWindow.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\FBindWindow.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\ShopWindow.cs" />
+    <Compile Include="Scenes\GameplayAssets\Windows\SkillTreeWindow.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\StatusWindow.cs" />
     <Compile Include="Scenes\GameplayAssets\Windows\TargetWindow.cs" />
-    <Compile Include="Scenes\GameplayAssets\Inventory.cs" />
-    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -116,6 +88,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="graphics\grassB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="graphics\gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="graphics\icons.png">
@@ -151,6 +126,9 @@
     <Content Include="graphics\mapsprites_nt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="graphics\minecraftgrass.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="graphics\path6164.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -175,6 +153,9 @@
     <Content Include="graphics\sphere.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="graphics\terraintiles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="graphics\vitruvian.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -194,11 +175,26 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
+    <Content Include="Scenes\GameplayAssets\Models\textures\ftest.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scenes\GameplayAssets\Models\textures\sphere.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scenes\GameplayAssets\Models\textures\trees.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="gamedata\abilities.gdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="gamedata\abilitytemplates\Mage.gdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="gamedata\classes.gdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="gamedata\itemtemplates\heavy_0_10.gdf">
@@ -220,10 +216,31 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="graphics\SavC150.tmp" />
+    <None Include="Scenes\GameplayAssets\Models\cube.mgf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Scenes\GameplayAssets\Models\default.mgf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Scenes\GameplayAssets\Models\dude1.mgf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Scenes\GameplayAssets\Models\hexapod.mcf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scenes\GameplayAssets\Models\humanoid.mcf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scenes\GameplayAssets\Models\null.mcf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scenes\GameplayAssets\Models\planttest.mgf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scenes\GameplayAssets\Models\sword1.mgf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scenes\GameplayAssets\Models\tree_spruce1.mgf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -232,6 +249,10 @@
       <Project>{a3377de7-8e2e-456d-8120-61c21730eac5}</Project>
       <Name>GameModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GameObject\GameObject.csproj">
+      <Project>{ffa614ca-bfaf-4e43-b3ed-7d23654940cb}</Project>
+      <Name>GameObject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GUI\GUI.csproj">
       <Project>{1416f2ff-b454-45ab-92be-811bfc66f6ad}</Project>
       <Name>GUI</Name>
@@ -239,6 +260,14 @@
     <ProjectReference Include="..\Terrain\Terrain.csproj">
       <Project>{5194618f-fe7f-434f-b5b6-d9dce3357bca}</Project>
       <Name>Terrain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorldGen\WorldGen.csproj">
+      <Project>{E5DB570A-1011-4E8E-A105-0D53805DF2B6}</Project>
+      <Name>WorldGen</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorldInfo\WorldInfo.csproj">
+      <Project>{EF163BC5-6C20-4C63-9119-9EE13D129D9F}</Project>
+      <Name>WorldInfo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

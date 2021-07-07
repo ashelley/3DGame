@@ -13,6 +13,19 @@ namespace GUI
     {
         List<Control> _controls;
         WindowManager _wm;
+
+        public delegate void ClickEventHandler(object sender, ClickEventArgs eventArgs);
+        public class ClickEventArgs
+        {
+            public int X;
+            public int Y;
+            public ClickEventArgs(int X, int Y)
+            {
+                this.X = X;
+                this.Y = Y;
+            }
+        }
+        public event ClickEventHandler OnClick;
         /// <summary>
         /// If control is not visible, it loses collision and is not rendered.
         /// </summary>
@@ -116,7 +129,7 @@ namespace GUI
         /// <param name="Y">Y</param>
         public virtual void Click(float X, float Y)
         {
-            
+            //Console.Write(this.GetType().ToString() + ": " + (int)X + "," + (int)Y);
 
         }
         /// <summary>
@@ -156,8 +169,7 @@ namespace GUI
         /// <param name="Y">Y</param>
         public virtual void MouseUp(float X, float Y)
         {
-            //  Volatile.Console.Write("mouseup event - " + X.ToString() + "," + Y.ToString() + "@" + this.Title);
-
+            
             //this more or less emulates Windows behaviour
             //you can mousedown, move out and back in again and releasing will click the control
             //otherwise mouseup wastes the click
@@ -165,6 +177,16 @@ namespace GUI
             {
 
                 this.Click(X, Y);
+                if(this is ITextInput input)
+                {
+                    this.WM.FocusedText = input;
+                }
+                else
+                {
+                    this.WM.FocusedText?.LoseFocus();
+                    this.WM.FocusedText = null;
+                }
+                OnClick?.Invoke(this, new ClickEventArgs((int)X, (int)Y));
             }
             foreach (Control c in this.Controls)
             {
@@ -230,6 +252,28 @@ namespace GUI
 
             return r;
 
+
+        }
+        
+
+        /// <summary>
+        /// Gets the window this control belongs to
+        /// </summary>
+        /// <returns>true on success, false on failure (orphaned control)</returns>
+        public Window GetParentWindow()
+        {
+            Control p = this.Parent;
+            //traverse up a parent tree - windows have no parent so it will exit once it hits one, closing it.
+
+            while (p != null)
+            {
+                if (p is Window w)
+                {
+                    return w;
+                }
+                p = p.Parent;
+            }
+            return null;
 
         }
     }

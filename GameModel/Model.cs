@@ -10,10 +10,23 @@ namespace GameModel
 {
     public class Model : ModelPart, IDisposable
     {
+        public static Dictionary<string, Texture2D> TexturePool;
+        public static List<string> TextureList;
         public Dictionary<string, Dictionary<string, PartAnimation>> Choreo;
         private VertexBuffer _VB;
         private IndexBuffer _IB;
-        private Dictionary<string,List<ModelPart>>AnimationMapping;
+        private Dictionary<string, List<ModelPart>> AnimationMapping;
+        private float maxlen=0;
+        public Vector3 Offset;
+        public float Height;
+        public bool Dirty = true;
+        public float CurrentAnimationLength {
+            get
+                {
+                return maxlen;
+                }
+            }
+        public string ChoreoName;
         /// <summary>
         /// Bakes the model and creates the necessary index/vertex/animation buffers
         /// </summary>
@@ -57,8 +70,35 @@ namespace GameModel
             _IB.SetData<int>(indices);
             _VB.SetData<ModelVertex>(vertices);
 
+            this.Dirty = false;
 
+        }
 
+        public ModelPart FindPart(string name)
+        {
+            List<ModelPart> Parts = this.Children[0].GetFlatList();
+            foreach (ModelPart p in Parts)
+            {
+
+                if (p.Title == name)
+                    return p;
+            }
+            return null;
+        }
+
+        public void RebuildSkeleton()
+        {
+            AnimationMapping = new Dictionary<string, List<ModelPart>>();
+            List<ModelPart> Parts = this.Children[0].GetFlatList();
+            foreach (ModelPart p in Parts)
+            {
+                
+                if (p.Title == null)
+                    continue;
+                if (!AnimationMapping.ContainsKey(p.Title)) //create key if needed
+                    AnimationMapping.Add(p.Title, new List<ModelPart>() { });
+                AnimationMapping[p.Title].Add(p);
+            }
         }
 
         public void ApplyAnimation(string Name)
@@ -67,21 +107,38 @@ namespace GameModel
                 ApplyAnimation(Name, this.Choreo);
         }
 
+        public void ClearAnimation()
+        {
+
+            List<ModelPart> Parts = this.Children[0].GetFlatList();
+            foreach (ModelPart p in Parts)
+            {
+                p.Animation = null;
+            }
+        }
+
         public void ApplyAnimation(string Name, Dictionary<string, Dictionary<string,PartAnimation>> Choreo)
         {
             if (AnimationMapping == null)
                 return;
             if (!Choreo.ContainsKey(Name))
                 return;
+            ClearAnimation();
             Dictionary<string, PartAnimation> Movement = Choreo[Name];
             List<ModelPart> tmppartlist;
+                maxlen = 0;
             foreach(KeyValuePair<string, PartAnimation> Part in Movement)
             {
                 if (!AnimationMapping.ContainsKey(Part.Key))
                     continue;
                 tmppartlist = AnimationMapping[Part.Key];
                 foreach (ModelPart p in tmppartlist)
+                {
+                    if (Part.Value.Length > maxlen)
+                        maxlen = Part.Value.Length;
                     p.Animation = Part.Value;
+                }
+                    
             }
         }
 
@@ -156,7 +213,7 @@ namespace GameModel
 
         public override void Render(GraphicsDevice device, float dT, Matrix World, Effect fx, bool Alpha)
         {
-            if (this._IB == null)
+            if (this._IB == null || this.Dirty)
                 Prepare(device);
             device.SetVertexBuffer(_VB);
             device.Indices = _IB;
@@ -177,8 +234,8 @@ namespace GameModel
 
         public void Dispose()
         {
-            this._IB.Dispose();
-            this._VB.Dispose();
+            this._IB?.Dispose();
+            this._VB?.Dispose();
         }
     }
 }

@@ -21,19 +21,21 @@ namespace GUI
         public int MouseX;
         public int MouseY;
         public Vector2 Screen;
-      //  public Interfaces.ITextInput FocusedText;
+        public ITextInput FocusedText;
        // public ToolTip ToolTip;
         public float MouseStillSeconds;
         public IActionIcon MouseGrab;
         public Control LastClickedControl;
         public string NotificationText;
         public float NotificationTimeout;
-        float NotificationTime = 100;
+        float NotificationTime = 2;
         public Renderer Renderer;
         public KeyboardState PreviousKbState { get; set; }
 
         public MouseState PreviousMouseState { get; set; }
         private List<Window> closedwindows;
+
+        public ModalWindow Modal { get; set; }
         public WindowManager()
         {
             this.Windows = new List<Window>();
@@ -129,15 +131,24 @@ namespace GUI
                 int CX = (int)((float)device.Viewport.Width / 2f);
                 int CY = (int)((float)device.Viewport.Height / 2f);
                 float scale = NotificationTime / 2.0f;
-                float A = Math.Min(1.0f, this.NotificationTimeout / this.NotificationTime);
+                float A = Math.Min(0.3f, this.NotificationTimeout / this.NotificationTime);
                 Color c = new Color(1.0f, 1.0f, 0.9f, A);
-              //TODO  GUIDraw.RenderBigText(device, CX, CY, this.NotificationText, c, true);
+                Renderer.RenderBigText(device, CX, CY, this.NotificationText, c, true);
             }
         }
         public void Add(Window Window)
         {
             Window.WM = this;
+            if (Window is ModalWindow mw)
+            {
+                mw.Center();
+                this.Modal = mw;
+            }
             this.Windows.Add(Window);
+        }
+        public void HandleTextInput(char Character, Keys Key)
+        {
+            FocusedText?.SendCharacter(Character);
         }
         public bool HandleMouse(MouseState Mouse, float dT)
         {
@@ -167,6 +178,9 @@ namespace GUI
                     return true;
                 }
                 PreviousMouseState = Mouse;
+
+                if (Modal != null)
+                    return true;
                 return false;
             }
             Window.MouseMove(MouseX - Window.X, MouseY - Window.Y);
@@ -229,6 +243,11 @@ namespace GUI
         public Window GetWindow(float X, float Y)
         {
             Window wnd = null;
+
+            if(Modal!=null)
+            {
+                return (Modal.CheckCollision(X, Y) ? Modal : null);
+            }
 
             for (int i = this.Windows.Count - 1; i >= 0; i--)
             {
